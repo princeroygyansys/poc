@@ -17,14 +17,21 @@ export default function Admin() {
       sessionStorage.setItem('adminKey', k); setKey(k)
     } catch (e) {
       setLeads(null); setKey(''); sessionStorage.removeItem('adminKey')
-      setError(e.message === 'Failed to fetch' ? 'API server is not running.' : e.message)
+      setError(e.message === 'Failed to fetch' ? 'Could not reach the API service.' : e.message)
     }
   }
   useEffect(() => { if (key) load(key) }, []) // eslint-disable-line
 
   const remove = async (id) => {
-    await fetch(`/api/leads/${id}`, { method: 'DELETE', headers: { 'x-admin-key': key } })
-    setLeads(leads.filter((l) => l.id !== id))
+    try {
+      const res = await fetch(`/api/leads/${id}`, { method: 'DELETE', headers: { 'x-admin-key': key } })
+      const result = await res.json()
+      if (!res.ok) throw new Error(result.error || 'We could not delete this lead.')
+      setLeads((current) => current.filter((lead) => lead.id !== id))
+      setError('')
+    } catch (e) {
+      setError(e.message === 'Failed to fetch' ? 'Could not reach the API.' : e.message)
+    }
   }
 
   return (
@@ -32,6 +39,7 @@ export default function Admin() {
       <div className="ph wrap"><h1>Leads.</h1><p>Project briefs submitted through the contact form.</p></div>
       <section style={{ paddingTop: 40 }}>
         <div className="wrap">
+          {error && leads && <div className="err" role="alert" style={{ marginBottom: 16 }}>{error}</div>}
           {!leads ? (
             <form className="formbox" style={{ maxWidth: 420 }} onSubmit={(e) => { e.preventDefault(); load(input) }}>
               <div className="f">
@@ -40,7 +48,7 @@ export default function Admin() {
                 {error && <div className="err">{error}</div>}
               </div>
               <button className="btn" type="submit">Open dashboard</button>
-              <p style={{ fontSize: 14, marginBottom: 0 }}>Set ADMIN_KEY in the server environment to enable dashboard access.</p>
+              <p style={{ fontSize: 14, marginBottom: 0 }}>Set ADMIN_KEY in your server or hosting environment to enable dashboard access.</p>
             </form>
           ) : leads.length === 0 ? (
             <p>No leads yet. Submit the contact form to see one here.</p>

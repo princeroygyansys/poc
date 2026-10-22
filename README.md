@@ -1,40 +1,65 @@
-# Loudbird – Digital marketing agency website (React + Router + Express)
+# Loudbird — Digital marketing agency website
+
+React, Vite, and React Router frontend with a local Express API and a Netlify production API.
 
 ## Run locally
-    npm install
-    npm run dev          # site: http://localhost:5173   API: http://localhost:3001
-
-## Production-style run
-    npm start            # builds, then serves site + API on http://localhost:3001
-
-## Pages
-/ (Home) · /services · /work · /work/:slug (case study) · /about · /contact · /admin · 404
-
-## Backend
-`server/index.js` is a small Express API.
-- POST /api/leads – saves the inquiry and sends an email to `CONTACT_EMAIL`
-- GET /api/leads, DELETE /api/leads/:id – require the configured `x-admin-key`
-
-### SMTP setup
-The contact form sends directly through the SMTP account configured on the server. It does not use the visitor's email app. The email is sent from your SMTP sender account, with the visitor's address set as Reply-To.
-
-Copy `.env.example` to `.env` and add your SMTP credentials. For Gmail, enable 2-Step Verification and create a Google App Password for the sending account; use that for `SMTP_PASS` (not your regular Gmail password):
 
 ```powershell
+npm install
 Copy-Item .env.example .env
-# Edit .env and set SMTP_USER, SMTP_PASS, and ADMIN_KEY.
+# Add local SMTP credentials and a strong ADMIN_KEY to .env.
 npm run dev
 ```
 
-`SMTP_HOST`, `SMTP_PORT`, `SMTP_USER`, and `SMTP_PASS` configure SMTP. `SMTP_SECURE=true` is typically used with port 465; port 587 usually uses `false`. `SMTP_FROM` is optional and defaults to `SMTP_USER`. Set `CONTACT_EMAIL` to change the recipient; it defaults to `princeku.ray143@gmail.com`. Keep `.env` private and configure the same variables in your hosting provider for deployment.
+The website runs at `http://localhost:5173`; its local API runs at `http://localhost:3001`.
+Local inquiries are stored in `server/leads.json`. This file is for development only.
 
-The API saves each inquiry before attempting delivery, and records whether email delivery succeeded. If SMTP is unavailable or rejects the message, the form reports the problem and the inquiry remains in the leads store.
+## Production architecture
 
-### Production storage and delivery
-`server/leads.json` is suitable for local development only. For a public deployment, use a persistent database and a durable email queue with retries and delivery monitoring; local files can be lost during redeploys, and an SMTP connection can fail temporarily. Protect lead and admin access with HTTPS and a strong, unique `ADMIN_KEY`. The admin dashboard is disabled until that key is set.
+The Netlify deployment uses:
 
-## Edit content
-All dummy content lives in `src/data.js`. Colours are tokens at the top of `src/styles.css`.
+- Netlify Functions for `POST /api/leads`, `GET /api/leads`, and `DELETE /api/leads/:id`.
+- Supabase Postgres for persistent inquiry storage.
+- Resend's API for inquiry notification emails.
 
-## Ideas to extend
-Swap leads.json for a database (SQLite/MongoDB), add campaign analytics, deploy (Render / Railway).
+The Express server and local SMTP workflow remain available for development. Netlify does not run `server/index.js` or persist `server/leads.json`.
+
+## Deploy to Netlify
+
+1. Push this project to a Git provider and import the repository in Netlify. The included `netlify.toml` configures `npm run build`, publishes `dist`, deploys `netlify/functions`, routes `/api/leads` to the API function, and sends other routes to the React app.
+2. Create a Supabase project. In its SQL Editor, run [`supabase/schema.sql`](./supabase/schema.sql) to create the `public.leads` table. Row Level Security is enabled with no public policies; only the server-side service-role key can access it.
+3. Create a Resend account and verify a domain you control. Choose a sender address on that verified domain.
+4. In Netlify, add these variables under **Site configuration → Environment variables**, for the production deploy context:
+
+   | Variable | Value |
+   | --- | --- |
+   | `SUPABASE_URL` | Supabase project URL |
+   | `SUPABASE_SERVICE_ROLE_KEY` | Supabase service-role key (secret; server-side only) |
+   | `RESEND_API_KEY` | Resend API key (secret; server-side only) |
+   | `RESEND_FROM` | Verified sender, e.g. `Loudbird <contact@your-verified-domain>` |
+   | `CONTACT_EMAIL` | Inbox for inquiries; defaults to `princeku.ray143@gmail.com` |
+   | `ADMIN_KEY` | Long, random, unique secret used by the leads dashboard |
+
+5. Redeploy after setting the environment variables. Test the contact form with an inquiry you intend to send, then check the inbox and the `/admin` dashboard. Do not expose the Supabase service-role key, Resend API key, or admin key as `VITE_*` variables.
+
+The email is sent from the verified `RESEND_FROM` address, with the visitor's address set as `Reply-To`. The visitor's email is not used as the sender. If sending fails after storage, the form reports the failure and the inquiry remains saved with a failed delivery status.
+
+## Local SMTP settings
+
+For local development, the Express API can deliver through SMTP. Set `SMTP_HOST`, `SMTP_PORT`, `SMTP_USER`, and `SMTP_PASS` in `.env`. `SMTP_SECURE=true` is typical for port 465; port 587 typically uses `false`. `SMTP_FROM` is optional and defaults to `SMTP_USER`. `CONTACT_EMAIL` defaults to `princeku.ray143@gmail.com`.
+
+Use an app-specific password for SMTP, keep `.env` private, and never commit real credentials. Netlify production uses Resend and Supabase; SMTP variables are not needed there.
+
+## Security and operational notes
+
+- Use strong, unique secrets and rotate any credentials that have been shared or exposed.
+- Restrict Supabase access to the function's service-role key. Never put that key in browser code or add public table policies for inquiry data.
+- Configure a Netlify rate limit for `POST /api/leads` and monitor function and email-provider logs to reduce spam and catch delivery failures.
+- Free-tier services may have usage caps or pause inactive database projects. This is suitable to launch and validate the site, but review quotas and backup needs as real inquiries arrive.
+- The admin page is protected by `ADMIN_KEY`; this is a simple shared-secret dashboard, not a full user-account system.
+
+## Pages and content
+
+Pages: `/`, `/services`, `/work`, `/work/:slug`, `/about`, `/contact`, `/admin`.
+
+Page content lives in `src/data.js`; visual tokens and styles live in `src/styles.css`.

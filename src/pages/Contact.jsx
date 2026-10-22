@@ -59,7 +59,7 @@ export default function Contact() {
       }
       setStatus('done')
     } catch {
-      setSubmitError('We could not reach the email server. Your message was not sent; please try again or email us directly.')
+      setSubmitError('We could not reach the inquiry service. Your message was not sent; please try again or email us directly.')
       setStatus('failed')
     }
   }
