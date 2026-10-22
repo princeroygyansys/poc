@@ -2,6 +2,7 @@ import { randomUUID, timingSafeEqual } from 'node:crypto'
 
 const supabaseUrl = process.env.SUPABASE_URL?.replace(/\/+$/, '')
 const supabaseKey = process.env.SUPABASE_SECRET_KEY || process.env.SUPABASE_SERVICE_ROLE_KEY
+const adminKey = process.env.ADMIN_KEY
 
 export function jsonResponse(statusCode, body) {
   return {
@@ -77,9 +78,11 @@ export async function supabaseRequest(path, { method = 'GET', body, prefer } = {
   return responseText ? JSON.parse(responseText) : null
 }
 
-export function isAuthorized(event) {
-  const adminKey = process.env.ADMIN_KEY
-  const providedKey = event.headers?.['x-admin-key'] || event.headers?.['X-Admin-Key']
+export function isAdminKeyConfigured() {
+  return Boolean(adminKey)
+}
+
+export function isValidAdminKey(providedKey) {
   if (!adminKey || typeof providedKey !== 'string') return false
   const expected = Buffer.from(adminKey)
   const actual = Buffer.from(providedKey)

@@ -1,5 +1,6 @@
 import {
-  isAuthorized,
+  isAdminKeyConfigured,
+  isValidAdminKey,
   jsonResponse,
   supabaseRequest,
   toLeadRecord,
@@ -8,8 +9,14 @@ import {
 
 const LEAD_ID_PATTERN = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i
 
-function hasAdminKey() {
-  return Boolean(process.env.ADMIN_KEY)
+function authorizeAdmin(event) {
+  if (!isAdminKeyConfigured()) {
+    return jsonResponse(503, { error: 'Admin access is not configured on the server.' })
+  }
+  const providedKey = Object.entries(event.headers || {})
+    .find(([name]) => name.toLowerCase() === 'x-admin-key')?.[1]
+  if (!isValidAdminKey(providedKey)) return jsonResponse(401, { error: 'Wrong admin key.' })
+  return null
 }
 
 async function createLead(event) {
@@ -55,10 +62,8 @@ async function createLead(event) {
 }
 
 async function listLeads(event) {
-  if (!hasAdminKey()) {
-    return jsonResponse(503, { error: 'Admin access is not configured on the server.' })
-  }
-  if (!isAuthorized(event)) return jsonResponse(401, { error: 'Wrong admin key.' })
+  const authorizationError = authorizeAdmin(event)
+  if (authorizationError) return authorizationError
 
   try {
     const rows = await supabaseRequest('leads?select=*&order=created_at.desc')
@@ -70,10 +75,8 @@ async function listLeads(event) {
 }
 
 async function deleteLead(event) {
-  if (!hasAdminKey()) {
-    return jsonResponse(503, { error: 'Admin access is not configured on the server.' })
-  }
-  if (!isAuthorized(event)) return jsonResponse(401, { error: 'Wrong admin key.' })
+  const authorizationError = authorizeAdmin(event)
+  if (authorizationError) return authorizationError
 
   const id = event.queryStringParameters?.id || event.path.split('/').filter(Boolean).at(-1)
   if (!LEAD_ID_PATTERN.test(id || '')) {

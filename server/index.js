@@ -3,18 +3,27 @@ import express from 'express'
 import fs from 'fs'
 import path from 'path'
 import { fileURLToPath } from 'url'
+import { isAdminKeyConfigured, isValidAdminKey } from '../netlify/functions/_shared.mjs'
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
 const FILE = process.env.LEADS_FILE || path.join(__dirname, 'leads.json')
-const ADMIN_KEY = process.env.ADMIN_KEY
 const PORT = process.env.PORT || 3001
 
 const read = () => (fs.existsSync(FILE) ? JSON.parse(fs.readFileSync(FILE, 'utf8')) : [])
 const write = (d) => fs.writeFileSync(FILE, JSON.stringify(d, null, 2))
-const isAdmin = (req) => Boolean(ADMIN_KEY) && req.get('x-admin-key') === ADMIN_KEY
 
 const app = express()
 app.use(express.json({ limit: '20kb' }))
+
+function authenticateAdmin(req, res, next) {
+  if (!isAdminKeyConfigured()) {
+    return res.status(503).json({ error: 'Admin access is not configured on the server.' })
+  }
+  if (!isValidAdminKey(req.get('x-admin-key'))) {
+    return res.status(401).json({ error: 'Wrong admin key.' })
+  }
+  return next()
+}
 
 app.post('/api/leads', async (req, res) => {
   const body = req.body || {}
@@ -54,14 +63,9 @@ app.post('/api/leads', async (req, res) => {
   res.status(201).json({ ok: true, saved: true })
 })
 
-app.get('/api/leads', (req, res) => {
-  if (!ADMIN_KEY) return res.status(503).json({ error: 'Admin access is not configured on the server.' })
-  return isAdmin(req) ? res.json(read()) : res.status(401).json({ error: 'Wrong admin key.' })
-})
+app.get('/api/leads', authenticateAdmin, (req, res) => res.json(read()))
 
-app.delete('/api/leads/:id', (req, res) => {
-  if (!ADMIN_KEY) return res.status(503).json({ error: 'Admin access is not configured on the server.' })
-  if (!isAdmin(req)) return res.status(401).json({ error: 'Wrong admin key.' })
+app.delete('/api/leads/:id', authenticateAdmin, (req, res) => {
   write(read().filter((l) => l.id !== req.params.id))
   res.json({ ok: true })
 })
@@ -75,5 +79,5 @@ if (fs.existsSync(dist)) {
 
 app.listen(PORT, () => {
   console.log(`API running on http://localhost:${PORT}`)
-  if (!ADMIN_KEY) console.warn('ADMIN_KEY is not configured; the leads dashboard is unavailable.')
+  if (!isAdminKeyConfigured()) console.warn('ADMIN_KEY is not configured; the leads dashboard is unavailable.')
 })

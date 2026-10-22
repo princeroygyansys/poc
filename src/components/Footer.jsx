@@ -10,7 +10,6 @@ export default function Footer() {
           <span>© 2026 Loudbird Studio · hello@loudbird.dev</span>
           <span style={{ display: 'flex', gap: 18, flexWrap: 'wrap' }}>
             {NAV.map(([to, label]) => <Link key={to} to={to}>{label}</Link>)}
-            <Link to="/admin">Admin</Link>
           </span>
         </div>
       </div>
