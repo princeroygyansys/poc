@@ -13,7 +13,8 @@ export default function Home() {
       <section className="hero">
         <div className="wrap herogrid">
           <div>
-            <h1>We design and build digital products that earn trust and drive growth.</h1>
+            <p className="eyebrow"><span /> Independent digital studio · Bengaluru & beyond</p>
+            <h1>We design and build <span>digital products</span> that earn trust and drive growth.</h1>
             <p className="lead">Loudbird is a Bengaluru-based digital agency. We help growing companies launch brands, websites and products that customers rely on, with clear scope, honest timelines and measurable results.</p>
             <div className="cta">
               <Link className="btn" to="/contact">Start a project</Link>

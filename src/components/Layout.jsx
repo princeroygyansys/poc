@@ -38,6 +38,7 @@ export default function Layout() {
     }, { threshold: 0.12, rootMargin: '0px 0px -32px 0px' })
 
     elements.forEach((element, index) => {
+      element.setAttribute('data-reveal', '')
       element.style.setProperty('--reveal-delay', `${Math.min(index % 5, 4) * 70}ms`)
       observer.observe(element)
     })
