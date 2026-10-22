@@ -3,7 +3,8 @@
 :root[data-theme="dark"]{--bg:#0A1524;--surface:#0F2036;--card:#112640;--ink:#E7EDF5;--muted:#9FB0C4;--line:#22384F;--primary:#3D72DB;--primary-d:#2F5FC2;--accent:#D9A94E;--err:#FF9A8A;--footer:#07111F;color-scheme:dark}
 html{scroll-behavior:smooth;scroll-padding-top:90px}
 *,*::before,*::after{box-sizing:inherit}
-body{margin:0;background:var(--bg);color:var(--ink);font-family:'Public Sans',system-ui,-apple-system,'Segoe UI',sans-serif;font-size:17px;line-height:1.6;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:'Manrope',system-ui,-apple-system,'Segoe UI',sans-serif;font-size:17px;line-height:1.6;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+button,input,select,textarea{font:inherit}
 a{color:inherit}
 :focus-visible{outline:3px solid var(--primary);outline-offset:3px;border-radius:4px}
 .wrap{max-width:1160px;margin:0 auto;padding:0 28px}
@@ -590,4 +591,10 @@ th{color:var(--ink)}
 }
 @media(prefers-reduced-motion:reduce){
  main.page-enter>section>.wrap{animation:none!important}
+}
+
+/* Keep display, body, and interface typography in one consistent family. */
+h1,h2,h3,.logo,.proof b,.clients,.art,.step b,.stat b,.q p,.avatar,
+.cs-hero,.big,.art-mark,.art-result strong,.service-card .ic,.about-orbit-core{
+ font-family:'Manrope',system-ui,-apple-system,'Segoe UI',sans-serif
 }
