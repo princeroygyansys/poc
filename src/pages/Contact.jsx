@@ -93,11 +93,8 @@ export default function Contact() {
           <div className="contact-info">
             <div className="contact-details">
               <h2 style={{ fontSize: 'clamp(32px,5vw,56px)' }}>What would growth look like?</h2>
-              <p>
-                <strong>hello@loudbird.dev</strong>
-                {WHATSAPP_LINK && <><br /><a href={WHATSAPP_LINK}>+{WHATSAPP_NUMBER}</a></>}
-              </p>
-              <p>Loudbird Studio<br />New Delhi, India</p>
+              <p><strong>hello@loudbird.dev</strong></p>
+              <p>Loudbird Studio<br />New Delhi, India<br />+91 00000 00000</p>
             </div>
             {WHATSAPP_LINK && (
               <a
