@@ -5,7 +5,7 @@ import { BUDGETS, SERVICES, TIMELINES } from '../data'
 const EMPTY = { name: '', email: '', company: '', service: SERVICES[0].title, budget: BUDGETS[1], timeline: TIMELINES[1], message: '' }
 
 export default function Contact() {
-  usePageTitle('Start a project')
+  usePageTitle('Talk digital marketing')
   const [v, setV] = useState(EMPTY)
   const [errors, setErrors] = useState({})
   const [status, setStatus] = useState('idle') // idle | sending | done | failed
@@ -55,21 +55,21 @@ export default function Contact() {
   return (
     <>
       <div className="ph wrap">
-        <h1>Start a project.</h1>
-        <p>Tell us what you’re planning. We’ll reply within one working day with next steps.</p>
+        <h1>Let’s grow your business.</h1>
+        <p>Tell us what you want to achieve with digital marketing. We’ll get back to you within one working day.</p>
       </div>
       <section style={{ paddingTop: 40 }}>
         <div className="wrap two" style={{ alignItems: 'start' }}>
           <div>
-            <h2 style={{ fontSize: 'clamp(32px,5vw,56px)' }}>Or just say hi.</h2>
+            <h2 style={{ fontSize: 'clamp(32px,5vw,56px)' }}>What would growth look like?</h2>
             <p><strong>hello@loudbird.dev</strong><br />+91 80 5550 0123</p>
             <p>Loudbird Studio<br />12 Church Street, Bengaluru 560001</p>
           </div>
           <div className="formbox">
             {status === 'done' ? (
               <div className="ok" role="status">
-                <h3>Your email is ready, {v.name.split(' ')[0]}.</h3>
-                <p>Your mail app should open with the brief addressed to princeku.ray143@gmail.com. Press Send in that app to deliver it. We’ll reply to {v.email} within one working day.</p>
+                <h3>Your message is ready, {v.name.split(' ')[0]}.</h3>
+                <p>Your mail app should open with your marketing brief addressed to princeku.ray143@gmail.com. Press Send in that app to deliver it. We’ll reply to {v.email} within one working day.</p>
                 <a className="btn ghost" href={emailLink}>Open email app</a>
                 <button className="btn ghost" onClick={() => { setV(EMPTY); setEmailLink(''); setStatus('idle') }}>Send another</button>
               </div>
@@ -80,7 +80,7 @@ export default function Contact() {
                 {select('s', 'What do you need?', 'service', SERVICES.map((s) => s.title))}
                 <div className="row2">{select('b', 'Budget', 'budget', BUDGETS)}{select('t', 'Timeline', 'timeline', TIMELINES)}</div>
                 <div className="f">
-                  <label htmlFor="m">Tell us about it</label>
+                  <label htmlFor="m">What are your marketing goals?</label>
                   <textarea id="m" rows="5" value={v.message} onChange={set('message')} aria-invalid={!!errors.message} />
                   {errors.message && <div className="err">{errors.message}</div>}
                 </div>

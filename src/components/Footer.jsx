@@ -5,7 +5,7 @@ export default function Footer() {
   return (
     <footer className="foot">
       <div className="wrap" style={{ display: 'block' }}>
-        <p className="big">Let’s build something<br />that lasts.</p>
+        <p className="big">Let’s make your next<br />growth move count.</p>
         <div style={{ display: 'flex', justifyContent: 'space-between', flexWrap: 'wrap', gap: 16 }}>
           <span>© 2026 Loudbird Studio · hello@loudbird.dev</span>
           <span style={{ display: 'flex', gap: 18, flexWrap: 'wrap' }}>

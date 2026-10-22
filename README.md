@@ -1,4 +1,4 @@
-# poc – Agency website proof of concept (React + Router + Express)
+# Loudbird – Digital marketing agency website (React + Router + Express)
 
 ## Run locally
     npm install
@@ -38,4 +38,4 @@ npm run dev
 All dummy content lives in `src/data.js`. Colours are tokens at the top of `src/styles.css`.
 
 ## Ideas to extend
-Swap leads.json for a database (SQLite/MongoDB), add a blog, deploy (Render / Railway).
+Swap leads.json for a database (SQLite/MongoDB), add campaign analytics, deploy (Render / Railway).

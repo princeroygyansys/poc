@@ -13,12 +13,12 @@ export default function Home() {
       <section className="hero">
         <div className="wrap herogrid">
           <div>
-            <p className="eyebrow"><span /> Independent digital studio · Bengaluru & beyond</p>
-            <h1>We design and build <span>digital products</span> that earn trust and drive growth.</h1>
-            <p className="lead">Loudbird is a Bengaluru-based digital agency. We help growing companies launch brands, websites and products that customers rely on, with clear scope, honest timelines and measurable results.</p>
+            <p className="eyebrow"><span /> Independent digital marketing agency · Bengaluru & beyond</p>
+            <h1>We turn <span>digital marketing</span> into measurable growth.</h1>
+            <p className="lead">Loudbird is a Bengaluru-based digital marketing agency helping ambitious businesses get found, earn attention and turn more of it into customers—with clear strategy and results you can measure.</p>
             <div className="cta">
               <Link className="btn" to="/contact">Start a project</Link>
-              <Link className="btn ghost" to="/work">View case studies</Link>
+              <Link className="btn ghost" to="/work">See campaign results</Link>
             </div>
           </div>
           <aside className="proof" aria-label="Agency at a glance">
@@ -29,7 +29,7 @@ export default function Home() {
 
       <section>
         <div className="wrap">
-          <p style={{ fontWeight: 600, margin: '0 0 16px' }}>Trusted by teams at</p>
+          <p style={{ fontWeight: 600, margin: '0 0 16px' }}>Growth partners to teams at</p>
           <div className="clients">{CLIENTS.map((c) => <span key={c}>{c}</span>)}</div>
         </div>
       </section>
@@ -52,9 +52,9 @@ export default function Home() {
 
       <section style={{ paddingTop: 0 }}>
         <div className="wrap">
-          <h2>Recent work</h2>
+          <h2>Campaigns that move the numbers</h2>
           <div className="grid">{PROJECTS.slice(0, 3).map((p) => <ProjectCard key={p.slug} p={p} />)}</div>
-          <p style={{ marginTop: 32 }}><Link className="btn ghost" to="/work">View all projects</Link></p>
+          <p style={{ marginTop: 32 }}><Link className="btn ghost" to="/work">View all campaigns</Link></p>
         </div>
       </section>
 

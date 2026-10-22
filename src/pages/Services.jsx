@@ -8,8 +8,8 @@ export default function Services() {
   return (
     <>
       <div className="ph wrap">
-        <h1>What we do.</h1>
-        <p>Four disciplines under one roof, so brand, product and growth all pull in the same direction.</p>
+        <h1>Marketing built for growth.</h1>
+        <p>Four connected digital marketing services that help you reach the right audience, earn their attention and grow revenue.</p>
       </div>
       <section style={{ paddingTop: 40 }}>
         <div className="wrap">

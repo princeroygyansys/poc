@@ -14,7 +14,7 @@ export default function CaseStudy() {
   return (
     <>
       <div className="ph wrap">
-        <p style={{ marginBottom: 12 }}><Link to="/work">← All work</Link></p>
+        <p style={{ marginBottom: 12 }}><Link to="/work">← All campaigns</Link></p>
         <h1 style={{ fontSize: 'clamp(32px,5vw,56px)' }}>{p.title}</h1>
         <p>{p.client} · {p.category}</p>
       </div>

@@ -17,7 +17,7 @@ export default function Nav() {
         </nav>
         <div className="right">
           <button className="icon" onClick={toggle} aria-label="Toggle light and dark theme">◐</button>
-          <Link className="btn pink" to="/contact" style={{ padding: '8px 18px' }}>Start a project</Link>
+          <Link className="btn pink" to="/contact" style={{ padding: '8px 18px' }}>Let’s talk growth</Link>
           <button className="icon burger" onClick={() => setOpen(!open)} aria-expanded={open} aria-label="Menu">{open ? '✕' : '☰'}</button>
         </div>
       </div>

@@ -8,7 +8,7 @@ export default function About() {
     <>
       <div className="ph wrap">
         <h1>About us.</h1>
-        <p>Loudbird started in 2017 with two designers, one developer and a shared belief that good work should be impossible to ignore. Today we’re a team of twelve based in Bengaluru, working with clients worldwide.</p>
+        <p>Loudbird is an independent digital marketing agency based in Bengaluru. Since 2017, we’ve helped businesses build visibility, connect with customers and grow through thoughtful strategy and measurable campaigns.</p>
       </div>
       <section style={{ paddingTop: 40 }}>
         <div className="wrap">
@@ -22,7 +22,7 @@ export default function About() {
       </section>
       <section style={{ paddingTop: 0 }}>
         <div className="wrap">
-          <h2>The team</h2>
+          <h2>Your growth team</h2>
           <div className="team">
             {TEAM.map((m) => (
               <div className="person" key={m.name}>
