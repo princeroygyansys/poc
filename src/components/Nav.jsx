@@ -12,13 +12,15 @@ export default function Nav() {
         <Link className="logo" to="/" onClick={() => setOpen(false)}>Loudbird</Link>
         <nav className={`links menu${open ? ' open' : ''}`} aria-label="Main">
           {NAV.map(([to, label]) => (
-            <NavLink key={to} to={to} end={to === '/'} onClick={() => setOpen(false)}>{label}</NavLink>
+            <NavLink key={to} to={to} end={to === '/'} onClick={() => setOpen(false)}>
+              <span className="nav-link-label">{label}</span>
+            </NavLink>
           ))}
         </nav>
         <div className="right">
           <button className="icon" onClick={toggle} aria-label="Toggle light and dark theme">◐</button>
           <Link className="btn pink" to="/contact" style={{ padding: '8px 18px' }}>Let’s talk growth</Link>
-          <button className="icon burger" onClick={() => setOpen(!open)} aria-expanded={open} aria-label="Menu">{open ? '✕' : '☰'}</button>
+          <button className={`icon burger${open ? ' menu-open' : ''}`} onClick={() => setOpen(!open)} aria-expanded={open} aria-label={open ? 'Close menu' : 'Open menu'}>{open ? '✕' : '☰'}</button>
         </div>
       </div>
     </header>
