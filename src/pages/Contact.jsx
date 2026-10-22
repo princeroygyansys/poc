@@ -16,10 +16,11 @@ export default function Contact() {
   }))
   const [errors, setErrors] = useState({})
   const [status, setStatus] = useState('idle') // idle | sending | done | failed
+  const [submitError, setSubmitError] = useState('')
   const [emailLink, setEmailLink] = useState('')
   const set = (k) => (e) => setV({ ...v, [k]: e.target.value })
 
-  const submit = (e) => {
+  const submit = async (e) => {
     e.preventDefault()
     const n = {}
     if (v.name.trim().length < 2) n.name = 'Enter your name (at least 2 characters).'
@@ -39,10 +40,28 @@ export default function Contact() {
       'Brief:',
       v.message.trim(),
     ].join('\n')
-    const link = `mailto:princeku.ray143@gmail.com?subject=${encodeURIComponent(`Project brief from ${v.name.trim()}`)}&body=${encodeURIComponent(body)}`
+    const link = `mailto:princeku.ray143@gmail.com?subject=${encodeURIComponent(`Marketing inquiry from ${v.name.trim()}`)}&body=${encodeURIComponent(body)}`
     setEmailLink(link)
-    window.location.href = link
-    setStatus('done')
+    setSubmitError('')
+    setStatus('sending')
+
+    try {
+      const res = await fetch('/api/leads', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(v),
+      })
+      const result = await res.json()
+      if (!res.ok) {
+        setSubmitError(result.error || 'We could not send your inquiry. Please try again.')
+        setStatus('failed')
+        return
+      }
+      setStatus('done')
+    } catch {
+      setSubmitError('We could not reach the email server. Your message was not sent; please try again or email us directly.')
+      setStatus('failed')
+    }
   }
 
   const field = (id, label, key, type = 'text') => (
@@ -75,9 +94,8 @@ export default function Contact() {
           <div className="formbox">
             {status === 'done' ? (
               <div className="ok" role="status">
-                <h3>Your message is ready, {v.name.split(' ')[0]}.</h3>
-                <p>Your mail app should open with your marketing brief addressed to princeku.ray143@gmail.com. Press Send in that app to deliver it. We’ll reply to {v.email} within one working day.</p>
-                <a className="btn ghost" href={emailLink}>Open email app</a>
+                <h3>Thanks, {v.name.split(' ')[0]}!</h3>
+                <p>Your inquiry has been sent to our team. We’ll reply to {v.email} within one working day.</p>
                 <button className="btn ghost" onClick={() => { setV(EMPTY); setEmailLink(''); setStatus('idle') }}>Send another</button>
               </div>
             ) : (
@@ -91,7 +109,14 @@ export default function Contact() {
                   <textarea id="m" rows="5" value={v.message} onChange={set('message')} aria-invalid={!!errors.message} />
                   {errors.message && <div className="err">{errors.message}</div>}
                 </div>
-                <button className="btn pink" type="submit">Send brief</button>
+                {status === 'failed' && (
+                  <div className="err" role="alert" style={{ marginBottom: 12 }}>
+                    {submitError} <a href={emailLink}>Email us directly</a>.
+                  </div>
+                )}
+                <button className="btn pink" type="submit" disabled={status === 'sending'}>
+                  {status === 'sending' ? 'Sending…' : 'Send brief'}
+                </button>
               </form>
             )}
           </div>

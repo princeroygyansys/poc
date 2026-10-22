@@ -11,9 +11,9 @@ export default function Admin() {
   const load = async (k) => {
     try {
       const res = await fetch('/api/leads', { headers: { 'x-admin-key': k } })
-      if (res.status === 401) throw new Error('Wrong admin key.')
-      if (!res.ok) throw new Error('Server error.')
-      setLeads(await res.json()); setError('')
+      const result = await res.json()
+      if (!res.ok) throw new Error(result.error || 'Server error.')
+      setLeads(result); setError('')
       sessionStorage.setItem('adminKey', k); setKey(k)
     } catch (e) {
       setLeads(null); setKey(''); sessionStorage.removeItem('adminKey')
@@ -40,14 +40,14 @@ export default function Admin() {
                 {error && <div className="err">{error}</div>}
               </div>
               <button className="btn" type="submit">Open dashboard</button>
-              <p style={{ fontSize: 14, marginBottom: 0 }}>Default key for local development: admin123</p>
+              <p style={{ fontSize: 14, marginBottom: 0 }}>Set ADMIN_KEY in the server environment to enable dashboard access.</p>
             </form>
           ) : leads.length === 0 ? (
             <p>No leads yet. Submit the contact form to see one here.</p>
           ) : (
             <div className="tablewrap">
               <table>
-                <thead><tr><th>Date</th><th>Name</th><th>Email</th><th>Need</th><th>Budget</th><th>Message</th><th></th></tr></thead>
+                <thead><tr><th>Date</th><th>Name</th><th>Email</th><th>Need</th><th>Budget</th><th>Message</th><th>Email status</th><th></th></tr></thead>
                 <tbody>
                   {leads.map((l) => (
                     <tr key={l.id}>
@@ -57,6 +57,7 @@ export default function Admin() {
                       <td>{l.service}<br /><small>{l.timeline}</small></td>
                       <td>{l.budget}</td>
                       <td style={{ minWidth: 220 }}>{l.message}</td>
+                      <td>{l.deliveryStatus || 'unknown'}</td>
                       <td><button className="chip" onClick={() => remove(l.id)} aria-label={`Delete lead from ${l.name}`}>Delete</button></td>
                     </tr>
                   ))}
