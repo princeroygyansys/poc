@@ -1,73 +1,113 @@
-import { Link } from 'react-router-dom'
-import usePageTitle from '../hooks/usePageTitle'
-import { CLIENTS, PROJECTS, SERVICES, STATS } from '../data'
-import ProjectCard from '../components/ProjectCard'
-import Process from '../components/Process'
-import Testimonials from '../components/Testimonials'
-import CtaBand from '../components/CtaBand'
+import { Link } from 'react-router-dom';
+import usePageTitle from '../hooks/usePageTitle';
+import { CLIENTS, PROJECTS, SERVICES, STATS } from '../data';
+import ProjectCard from '../components/ProjectCard';
+import Process from '../components/Process';
+import Testimonials from '../components/Testimonials';
+import CtaBand from '../components/CtaBand';
 
 export default function Home() {
-  usePageTitle('')
+  usePageTitle('');
   return (
     <>
-      <section className="hero">
-        <div className="wrap herogrid">
+      <section className='hero'>
+        <div className='wrap herogrid'>
           <div>
-            <p className="eyebrow"><span /> Independent digital marketing agency · Bengaluru & beyond</p>
-            <h1>We turn <span>digital marketing</span> into measurable growth.</h1>
-            <p className="lead">Loudbird is a Bengaluru-based digital marketing agency helping ambitious businesses get found, earn attention and turn more of it into customers—with clear strategy and results you can measure.</p>
-            <div className="cta">
-              <Link className="btn" to="/contact">Start a project</Link>
-              <Link className="btn ghost" to="/work">See campaign results</Link>
+            <p className='eyebrow'>
+              <span /> Independent digital marketing agency · XYZ & beyond
+            </p>
+            <h1>
+              We turn <span>digital marketing</span> into measurable growth.
+            </h1>
+            <p className='lead'>
+              Loudbird is a xyz-based digital marketing agency helping ambitious businesses get
+              found, earn attention and turn more of it into customers—with clear strategy and
+              results you can measure.
+            </p>
+            <div className='cta'>
+              <Link className='btn' to='/contact'>
+                Start a project
+              </Link>
+              <Link className='btn ghost' to='/work'>
+                See campaign results
+              </Link>
             </div>
           </div>
-          <aside className="proof" aria-label="Agency at a glance">
-            {STATS.map(([n, l]) => <div key={l}><b>{n}</b><span>{l}</span></div>)}
+          <aside className='proof' aria-label='Agency at a glance'>
+            {STATS.map(([n, l]) => (
+              <div key={l}>
+                <b>{n}</b>
+                <span>{l}</span>
+              </div>
+            ))}
           </aside>
         </div>
       </section>
 
       <section>
-        <div className="wrap">
+        <div className='wrap'>
           <p style={{ fontWeight: 600, margin: '0 0 16px' }}>Growth partners to teams at</p>
-          <div className="clients">{CLIENTS.map((c) => <span key={c}>{c}</span>)}</div>
+          <div className='clients'>
+            {CLIENTS.map(c => (
+              <span key={c}>{c}</span>
+            ))}
+          </div>
         </div>
       </section>
 
       <section style={{ paddingTop: 0 }}>
-        <div className="wrap">
+        <div className='wrap'>
           <h2>What we do</h2>
-          <div className="svcs">
-            {SERVICES.map((s) => (
-              <div className="svc" key={s.slug}>
-                <span className="ic" aria-hidden="true">{s.icon}</span>
+          <div className='svcs'>
+            {SERVICES.map(s => (
+              <div className='svc' key={s.slug}>
+                <span className='ic' aria-hidden='true'>
+                  {s.icon}
+                </span>
                 <h3>{s.title}</h3>
                 <p>{s.desc}</p>
               </div>
             ))}
           </div>
-          <p style={{ marginTop: 32 }}><Link className="btn ghost" to="/services">All services</Link></p>
+          <p style={{ marginTop: 32 }}>
+            <Link className='btn ghost' to='/services'>
+              All services
+            </Link>
+          </p>
         </div>
       </section>
 
       <section style={{ paddingTop: 0 }}>
-        <div className="wrap">
+        <div className='wrap'>
           <h2>Campaigns that move the numbers</h2>
-          <div className="grid">{PROJECTS.slice(0, 3).map((p) => <ProjectCard key={p.slug} p={p} />)}</div>
-          <p style={{ marginTop: 32 }}><Link className="btn ghost" to="/work">View all campaigns</Link></p>
+          <div className='grid'>
+            {PROJECTS.slice(0, 3).map(p => (
+              <ProjectCard key={p.slug} p={p} />
+            ))}
+          </div>
+          <p style={{ marginTop: 32 }}>
+            <Link className='btn ghost' to='/work'>
+              View all campaigns
+            </Link>
+          </p>
         </div>
       </section>
 
       <Process />
 
       <section style={{ paddingTop: 0 }}>
-        <div className="wrap stats" style={{ marginTop: 0 }}>
-          {STATS.map(([n, l]) => <div className="stat" key={l}><b>{n}</b>{l}</div>)}
+        <div className='wrap stats' style={{ marginTop: 0 }}>
+          {STATS.map(([n, l]) => (
+            <div className='stat' key={l}>
+              <b>{n}</b>
+              {l}
+            </div>
+          ))}
         </div>
       </section>
 
       <Testimonials />
       <CtaBand />
     </>
-  )
+  );
 }

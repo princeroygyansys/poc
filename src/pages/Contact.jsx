@@ -1,12 +1,19 @@
 import { useState } from 'react'
+import { useLocation } from 'react-router-dom'
 import usePageTitle from '../hooks/usePageTitle'
 import { BUDGETS, SERVICES, TIMELINES } from '../data'
 
 const EMPTY = { name: '', email: '', company: '', service: SERVICES[0].title, budget: BUDGETS[1], timeline: TIMELINES[1], message: '' }
 
 export default function Contact() {
+  const location = useLocation()
   usePageTitle('Talk digital marketing')
-  const [v, setV] = useState(EMPTY)
+  const [v, setV] = useState(() => ({
+    ...EMPTY,
+    service: SERVICES.some((service) => service.title === location.state?.service)
+      ? location.state.service
+      : EMPTY.service,
+  }))
   const [errors, setErrors] = useState({})
   const [status, setStatus] = useState('idle') // idle | sending | done | failed
   const [emailLink, setEmailLink] = useState('')

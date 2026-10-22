@@ -13,6 +13,8 @@ export default function Layout() {
       '.hero .herogrid > *',
       'section .wrap > h2',
       'section .wrap > .svcs > *',
+      '.service-list > *',
+      '.services-page .steps > *',
       'section .wrap > .grid > *',
       'section .wrap > .steps > *',
       'section .wrap > .stats > *',
