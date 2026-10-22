@@ -55,7 +55,7 @@ export default function Admin() {
           ) : (
             <div className="tablewrap">
               <table>
-                <thead><tr><th>Date</th><th>Name</th><th>Email</th><th>Need</th><th>Budget</th><th>Message</th><th>Email status</th><th></th></tr></thead>
+                <thead><tr><th>Date</th><th>Name</th><th>Email</th><th>Need</th><th>Budget</th><th>Message</th><th>Reply</th><th></th></tr></thead>
                 <tbody>
                   {leads.map((l) => (
                     <tr key={l.id}>
@@ -65,7 +65,16 @@ export default function Admin() {
                       <td>{l.service}<br /><small>{l.timeline}</small></td>
                       <td>{l.budget}</td>
                       <td style={{ minWidth: 220 }}>{l.message}</td>
-                      <td>{l.deliveryStatus || 'unknown'}</td>
+                      <td>
+                        <a
+                          className="btn ghost"
+                          href={`https://mail.google.com/mail/?view=cm&fs=1&to=${encodeURIComponent(l.email)}&su=${encodeURIComponent(`Re: ${l.service || 'Your inquiry to Loudbird Studio'}`)}&body=${encodeURIComponent(`Hi ${l.name.split(' ')[0]},\n\n\n\nBest,\nLoudbird Studio`)}`}
+                          target="_blank"
+                          rel="noreferrer"
+                        >
+                          Reply in Gmail
+                        </a>
+                      </td>
                       <td><button className="chip" onClick={() => remove(l.id)} aria-label={`Delete lead from ${l.name}`}>Delete</button></td>
                     </tr>
                   ))}

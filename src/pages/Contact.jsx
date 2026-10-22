@@ -95,7 +95,7 @@ export default function Contact() {
             {status === 'done' ? (
               <div className="ok" role="status">
                 <h3>Thanks, {v.name.split(' ')[0]}!</h3>
-                <p>Your inquiry has been sent to our team. We’ll reply to {v.email} within one working day.</p>
+                <p>Your inquiry has been received. We’ll review your brief and reply to {v.email} within one working day.</p>
                 <button className="btn ghost" onClick={() => { setV(EMPTY); setEmailLink(''); setStatus('idle') }}>Send another</button>
               </div>
             ) : (

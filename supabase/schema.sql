@@ -7,11 +7,11 @@ create table if not exists public.leads (
   service text not null default '',
   budget text not null default '',
   timeline text not null default '',
-  message text not null check (char_length(message) between 10 and 5000),
-  delivery_status text not null default 'pending'
-    check (delivery_status in ('pending', 'sent', 'failed'))
+  message text not null check (char_length(message) between 10 and 5000)
 );
 
 create index if not exists leads_created_at_idx on public.leads (created_at desc);
 
 alter table public.leads enable row level security;
+
+alter table public.leads drop column if exists delivery_status;

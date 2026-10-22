@@ -1,8 +1,6 @@
 import {
-  CONTACT_EMAIL,
   isAuthorized,
   jsonResponse,
-  sendLeadEmail,
   supabaseRequest,
   toLeadRecord,
   validateLead,
@@ -46,7 +44,6 @@ async function createLead(event) {
         budget: lead.budget,
         timeline: lead.timeline,
         message: lead.message,
-        delivery_status: lead.deliveryStatus,
       },
     })
   } catch (error) {
@@ -54,41 +51,7 @@ async function createLead(event) {
     return jsonResponse(500, { error: 'We could not save your brief. Please try again.' })
   }
 
-  try {
-    await sendLeadEmail(lead)
-  } catch (error) {
-    console.error('Failed to send project brief email:', error.message)
-    try {
-      await supabaseRequest(`leads?id=eq.${encodeURIComponent(lead.id)}`, {
-        method: 'PATCH',
-        prefer: 'return=minimal',
-        body: { delivery_status: 'failed' },
-      })
-    } catch (statusError) {
-      console.error('Failed to update project brief delivery status:', statusError.message)
-    }
-    return jsonResponse(502, {
-      error: 'Your brief was saved, but we could not email the team. Please try again later.',
-      saved: true,
-    })
-  }
-
-  try {
-    await supabaseRequest(`leads?id=eq.${encodeURIComponent(lead.id)}`, {
-      method: 'PATCH',
-      prefer: 'return=minimal',
-      body: { delivery_status: 'sent' },
-    })
-  } catch (error) {
-    console.error('Email was sent, but its delivery status could not be saved:', error.message)
-    return jsonResponse(500, {
-      error: 'Your email was delivered, but we could not update the saved brief.',
-      saved: true,
-      delivered: true,
-    })
-  }
-
-  return jsonResponse(201, { ok: true, saved: true, delivered: true })
+  return jsonResponse(201, { ok: true, saved: true })
 }
 
 async function listLeads(event) {
