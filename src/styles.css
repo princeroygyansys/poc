@@ -573,3 +573,21 @@ th{color:var(--ink)}
  .links.menu,.links.menu a{transition:none!important}
  .burger.menu-open{transform:none}
 }
+
+/* Scroll-linked depth zoom as sections pass through the viewport */
+@supports (animation-timeline:view()){
+ main.page-enter>section>.wrap{
+  transform-origin:50% 50%;
+  animation:scroll-depth-inward linear both;
+  animation-timeline:view();
+  animation-range:cover 0% cover 100%;
+ }
+ @keyframes scroll-depth-inward{
+  0%{opacity:1;transform:perspective(1200px) translateZ(0) scale(1)}
+  72%{opacity:.82;transform:perspective(1200px) translateZ(-120px) scale(.9)}
+  100%{opacity:0;transform:perspective(1200px) translateZ(-320px) scale(.72)}
+ }
+}
+@media(prefers-reduced-motion:reduce){
+ main.page-enter>section>.wrap{animation:none!important}
+}
